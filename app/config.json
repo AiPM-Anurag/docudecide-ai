@@ -1,0 +1,21 @@
+    {
+  "features": [
+    {
+      "name": "total_bill_amount",
+      "weight": 0.4,
+      "risk_threshold": 500000
+    },
+    {
+      "name": "policy_coverage_match",
+      "weight": 0.3
+    },
+    {
+      "name": "document_completeness",
+      "weight": 0.3
+    }
+  ],
+  "decision_thresholds": {
+    "auto_approve": 0.3,
+    "manual_review": 0.6
+  }
+}

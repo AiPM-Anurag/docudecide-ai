@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kritikos AI | Claim Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root {
+  --bg: linear-gradient(135deg,#eef5ff,#f8fbff,#e6f4f1);
+  --card:#ffffff;
+  --text:#1e293b;
+  --muted:#64748b;
+  --primary:#2563eb;
+  --accent:#10b981;
+  --border:#e2e8f0;
+}
+
+body.dark {
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#f1f5f9;
+  --muted:#94a3b8;
+  --primary:#3b82f6;
+  --accent:#34d399;
+  --border:#334155;
+}
+
+body {
+  margin:0;
+  font-family:"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* HEADER */
+.header{
+  padding:20px 40px;
+  background:linear-gradient(90deg,#1e3a8a,#2563eb);
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+}
+
+.toggle-switch{
+  width:45px;
+  height:22px;
+  background:white;
+  border-radius:20px;
+  position:relative;
+}
+
+.toggle-switch::after{
+  content:"";
+  width:18px;
+  height:18px;
+  background:#2563eb;
+  position:absolute;
+  top:2px;
+  left:2px;
+  border-radius:50%;
+  transition:0.3s;
+}
+
+body.dark .toggle-switch::after{
+  left:24px;
+}
+
+/* LAYOUT */
+.container{
+  max-width:1150px;
+  margin:30px auto;
+  display:flex;
+  gap:30px;
+}
+
+.card{
+  flex:3;
+  background:var(--card);
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.05);
+}
+
+.sidebar{
+  flex:1;
+  background:var(--card);
+  padding:25px;
+  border-radius:16px;
+  border:1px solid var(--border);
+}
+
+/* SHIELD */
+.shield{
+  width:70px;
+  margin-bottom:15px;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1);}
+}
+
+/* FORM */
+label{
+  font-weight:600;
+  font-size:14px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  margin-top:6px;
+  margin-bottom:15px;
+  background:transparent;
+  color:var(--text);
+}
+
+.progress{
+  height:8px;
+  background:var(--border);
+  border-radius:5px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:var(--primary);
+  transition:0.3s;
+}
+
+button{
+  padding:12px 20px;
+  border:none;
+  border-radius:8px;
+  background:var(--primary);
+  color:white;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* REASSURANCE */
+.reassurance{
+  padding:15px;
+  border-left:4px solid var(--accent);
+  background:rgba(16,185,129,0.1);
+  border-radius:8px;
+  margin-bottom:20px;
+  font-size:14px;
+  display:none;
+}
+
+/* SUCCESS */
+.success{
+  display:none;
+  margin-top:20px;
+  padding:18px;
+  border-left:4px solid var(--accent);
+  background:rgba(16,185,129,0.12);
+  border-radius:12px;
+}
+
+/* STEP FLOW */
+.post-steps{
+  margin-top:15px;
+  font-size:13px;
+}
+
+.step-flow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+
+.line{
+  height:2px;
+  width:40px;
+  background:var(--border);
+}
+
+/* DYK */
+.dyk{
+  margin-top:20px;
+  padding:12px;
+  background:rgba(37,99,235,0.1);
+  border-radius:8px;
+  font-size:14px;
+}
+
+/* GAMES */
+.game-card{
+  margin-top:20px;
+  padding:18px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:white;
+}
+
+.game-options{
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+}
+
+.game-options button{
+  background:white;
+  color:#4f46e5;
+  border-radius:20px;
+  padding:6px 14px;
+  font-size:13px;
+  border:none;
+  cursor:pointer;
+}
+
+#gameArea{
+  display:none;
+  margin-top:15px;
+  background:#f8fafc;
+  height:220px;
+  border-radius:12px;
+  padding:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h2>Kritikos AI</h2>
+  <div class="toggle" onclick="toggleMode()">🌙<div class="toggle-switch"></div></div>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<svg class="shield" viewBox="0 0 24 24" fill="#10b981">
+<path d="M12 2L4 5v6c0 5 3.8 9.7 8 11 4.2-1.3 8-6 8-11V5l-8-3z"/>
+</svg>
+
+<div class="progress">
+  <div class="progress-fill" id="progressBar"></div>
+</div>
+
+<form id="claimForm" enctype="multipart/form-data">
+
+<label>Who is submitting this claim?</label>
+<select name="role" id="role" onchange="updateReassurance()">
+  <option value="">Select</option>
+  <option value="patient">Patient</option>
+  <option value="caregiver">Caregiver</option>
+  <option value="hospital">Hospital</option>
+</select>
+
+<div id="reassuranceBox" class="reassurance"></div>
+
+<label>Policy Number</label>
+<input type="text" name="policy_number" oninput="updateProgress()">
+
+<label>Upload Discharge Summary</label>
+<input type="file" name="files" onchange="updateProgress()">
+
+<label>Upload Itemized Bill</label>
+<input type="file" name="files" onchange="updateProgress()">
+
+<label>Upload Diagnosis Report</label>
+<input type="file" name="files" onchange="updateProgress()">
+
+<button type="submit">Submit Claim</button>
+
+<div class="success" id="successMsg">
+  <div id="successText"></div>
+  <div class="post-steps">
+    <strong>What happens next?</strong>
+    <div class="step-flow">
+      <span>🤖</span><div class="line"></div>
+      <span>👨‍⚖️</span><div class="line"></div>
+      <span>💳</span>
+    </div>
+    AI Review (ETA: 5 mins) → Underwriter Review (SLA: 24 hrs) → Final Decision (within 48 hrs)
+  </div>
+</div>
+
+</form>
+</div>
+
+<div class="sidebar">
+<h3>Did You Know?</h3>
+<div class="dyk" id="dykBox"></div>
+
+<div class="game-card">
+🎮 Feeling tired?
+<div class="game-options">
+<button onclick="startJumpGame()">Jump</button>
+<button onclick="startShootGame()">Shoot</button>
+<button onclick="startMemoryGame()">Memory</button>
+</div>
+</div>
+
+<div id="gameArea"></div>
+</div>
+
+</div>
+
+<script>
+function toggleMode(){document.body.classList.toggle("dark");}
+
+function updateProgress(){
+  const inputs=document.querySelectorAll("input");
+  let filled=0;
+  inputs.forEach(i=>{
+    if(i.type==="file" && i.files.length>0) filled++;
+    if(i.type==="text" && i.value.trim()!=="") filled++;
+  });
+  document.getElementById("progressBar").style.width=
+    Math.min((filled/inputs.length)*100,100)+"%";
+}
+
+/* ORIGINAL EMPATHY TEXT — UNCHANGED */
+function updateReassurance(){
+  const role=document.getElementById("role").value;
+  const box=document.getElementById("reassuranceBox");
+  if(!role){box.style.display="none";return;}
+  box.style.display="block";
+
+  if(role==="patient"){
+    box.innerHTML="Health situations can feel overwhelming. Please prioritize rest, hydration, and balanced nutrition. Our team is here to support you through a transparent and timely claims process.";
+  }
+  else if(role==="caregiver"){
+    box.innerHTML="Supporting a loved one during recovery can be emotionally demanding. Please take short breaks, breathe deeply, and remember your wellbeing matters too.";
+  }
+  else if(role==="hospital"){
+    box.innerHTML="Thank you for assisting patients in claim submission. Accurate documentation ensures quicker evaluation and smoother processing.";
+  }
+}
+
+/* SUBMIT */
+document.getElementById("claimForm").addEventListener("submit", async function(e){
+  e.preventDefault();
+  const res=await fetch("http://127.0.0.1:8000/submit-claim/",{
+    method:"POST",body:new FormData(this)
+  });
+  const data=await res.json();
+  document.getElementById("successText").innerHTML=
+    `✅ Thank you for your submission.<br>
+     Reference ID: <strong>${data.reference_id}</strong>`;
+  document.getElementById("successMsg").style.display="block";
+});
+
+/* DYK */
+const tips=[
+"Submitting all documents together reduces processing time by 35%.",
+"Incomplete discharge summaries are the top cause of delays.",
+"Digital submission avoids paperwork errors."
+];
+let i=0;
+setInterval(()=>{dykBox.innerText=tips[i++%tips.length]},4000);
+
+/* ------------------ JUMP GAME ------------------ */
+function startJumpGame(){
+  const area=document.getElementById("gameArea");
+  area.style.display="block";
+  area.innerHTML=`
+  <div style="position:relative;height:200px;background:#f1f5f9;border-radius:12px;overflow:hidden;">
+    <div id="dino" style="position:absolute;bottom:0;left:40px;font-size:32px;transition:0.2s;">🦖</div>
+    <div id="obstacle" style="position:absolute;bottom:0;right:0;font-size:30px;">🌵</div>
+  </div>
+  <p>Press SPACE to jump</p>
+  `;
+  const obstacle=document.getElementById("obstacle");
+  const dino=document.getElementById("dino");
+  let position=0;
+  setInterval(()=>{
+    position+=6;
+    obstacle.style.right=position+"px";
+    if(position>600) position=0;
+  },30);
+  document.onkeydown=function(e){
+    if(e.code==="Space"){
+      dino.style.bottom="80px";
+      setTimeout(()=>{dino.style.bottom="0px";},300);
+    }
+  };
+}
+
+/* ------------------ BALLOON SHOOT ------------------ */
+function startShootGame(){
+  const area=document.getElementById("gameArea");
+  area.style.display="block";
+  area.innerHTML=`
+  <div style="position:relative;height:200px;background:#ecfeff;border-radius:12px;overflow:hidden;" id="shootArea"></div>
+  <p>Click balloons to pop 🎯</p>
+  `;
+  const shootArea=document.getElementById("shootArea");
+  setInterval(()=>{
+    const balloon=document.createElement("div");
+    balloon.innerHTML="🎈";
+    balloon.style.position="absolute";
+    balloon.style.left=Math.random()*90+"%";
+    balloon.style.bottom="0px";
+    balloon.style.fontSize="28px";
+    shootArea.appendChild(balloon);
+    let height=0;
+    const rise=setInterval(()=>{
+      height+=3;
+      balloon.style.bottom=height+"px";
+      if(height>180){
+        balloon.remove();
+        clearInterval(rise);
+      }
+    },40);
+    balloon.onclick=function(){
+      balloon.innerHTML="💥";
+      setTimeout(()=>balloon.remove(),200);
+      clearInterval(rise);
+    };
+  },1000);
+}
+
+/* ------------------ MEMORY FLIP GAME ------------------ */
+function startMemoryGame(){
+  const area=document.getElementById("gameArea");
+  area.style.display="block";
+  const emojis=["🍎","🍎","🍌","🍌","🍇","🍇"];
+  emojis.sort(()=>0.5-Math.random());
+  area.innerHTML="<div id='memoryGrid' style='display:grid;grid-template-columns:repeat(3,60px);gap:10px;'></div>";
+  const grid=document.getElementById("memoryGrid");
+  let selected=[];
+  emojis.forEach((emoji)=>{
+    const card=document.createElement("div");
+    card.style.height="60px";
+    card.style.background="#c7d2fe";
+    card.style.display="flex";
+    card.style.alignItems="center";
+    card.style.justifyContent="center";
+    card.style.fontSize="24px";
+    card.style.borderRadius="8px";
+    card.style.cursor="pointer";
+    card.dataset.value=emoji;
+    card.innerHTML="❓";
+    card.onclick=function(){
+      if(selected.length<2 && card.innerHTML==="❓"){
+        card.innerHTML=card.dataset.value;
+        selected.push(card);
+        if(selected.length===2){
+          setTimeout(()=>{
+            if(selected[0].dataset.value!==selected[1].dataset.value){
+              selected[0].innerHTML="❓";
+              selected[1].innerHTML="❓";
+            }
+            selected=[];
+          },700);
+        }
+      }
+    };
+    grid.appendChild(card);
+  });
+}
+</script>
+
+</body>
+</html>
