@@ -1,6 +1,6 @@
-# DocuDecide-AI
+# Kritikos AI (DocuDecide-AI)
 
-DocuDecide-AI is an end-to-end human-in-the-loop AI decisioning system for document-driven workflows such as insurance claims, underwriting, fraud review, and compliance checks.
+Kritikos AI is an end-to-end human-in-the-loop AI decisioning system for document-driven workflows such as insurance claims, underwriting, fraud review, and compliance checks.
 
 The system demonstrates how AI assists human decision-makers rather than replacing them — a pattern commonly used in high-stakes, real-world platforms.
 
@@ -30,7 +30,7 @@ Real-world systems require:
 - persistence
 - workflow handoffs across roles
 
-DocuDecide-AI focuses on end-to-end system design, not just AI scoring logic.
+Kritikos-AI focuses on end-to-end system design, not just AI scoring logic.
 
 ---
 
