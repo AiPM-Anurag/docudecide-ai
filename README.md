@@ -5,6 +5,13 @@ Kritikos AI is an end-to-end human-in-the-loop AI decisioning system for documen
 The system demonstrates how AI assists human decision-makers rather than replacing them — a pattern commonly used in high-stakes, real-world platforms.
 
 ---
+## 🌐 Live Demo
+
+Experience the Kritikos AI UI flow without running the code locally:
+
+👉 https://your-netlify-app.netlify.app
+---
+
 
 ## 🚀 What the System Does
 
