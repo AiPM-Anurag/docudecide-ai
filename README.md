@@ -9,7 +9,7 @@ The system demonstrates how AI assists human decision-makers rather than replaci
 
 Experience the Kritikos AI UI flow without running the code locally:
 
-👉 https://your-netlify-app.netlify.app
+👉  https://kritikos-ai-demo.netlify.app/
 ---
 
 
